@@ -12,7 +12,7 @@ SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Endless Platform Fighter")
 
-# Colors (SWAPPED)
+# Colors
 BACKGROUND_COLOR = (30, 30, 40)
 PLAYER_COLOR = (0, 150, 255)     # Neon Blue (YOU)
 ENEMY_COLOR = (255, 50, 50)      # Crimson Red (ENEMY)
@@ -54,7 +54,7 @@ clock = pygame.time.Clock()
 
 # --- MAIN GAME LOOP ---
 while True:
-    # 1. INPUTS / EVENTS
+    # 1. INPUTS / EVENTS (For single actions like jumping and attacking)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -62,23 +62,23 @@ while True:
             
         if event.type == pygame.KEYDOWN:
             # JUMP: Space Bar
-                # Horizontal Movement (Left / Right) - FIXED
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        player_x -= player_speed
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        player_x += player_speed
+            if event.key == pygame.K_SPACE and is_grounded:
+                y_velocity = jump_power
+                is_grounded = False
+                
+            # ATTACK: Z Key
+            if event.key == pygame.K_z:
                 # Distance check to see if enemy is close enough to hit
                 distance = math.sqrt((player_x - enemy_x)**2 + (player_y - enemy_y)**2)
                 if distance < 70:
                     enemy_hp -= 34
                     print(f"SLASH! Enemy HP: {enemy_hp}")
 
-    # Horizontal Movement (Left / Right)
+    # Smooth Continuous Movement (Left / Right)
     keys = pygame.key.get_pressed()
-    if keys[keys[pygame.K_LEFT] or keys[pygame.K_a]]:
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         player_x -= player_speed
-    if keys[keys[pygame.K_RIGHT] or keys[pygame.K_d]]:
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         player_x += player_speed
 
     # Keep player inside screen horizontal borders
@@ -114,10 +114,10 @@ while True:
     # Draw the Ground Floor
     pygame.draw.rect(screen, (60, 60, 80), [0, FLOOR_Y, SCREEN_WIDTH, SCREEN_HEIGHT - FLOOR_Y])
     
-    # Draw Enemy (Now Red)
+    # Draw Enemy (Red)
     pygame.draw.rect(screen, ENEMY_COLOR, [enemy_x, enemy_y, enemy_size, enemy_size])
     
-    # Draw Player (Now Blue)
+    # Draw Player (Blue)
     pygame.draw.rect(screen, PLAYER_COLOR, [player_x, player_y, player_size, player_size])
     
     # Draw UI (Score)
