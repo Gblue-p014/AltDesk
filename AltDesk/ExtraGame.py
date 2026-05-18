@@ -62,12 +62,12 @@ while True:
             
         if event.type == pygame.KEYDOWN:
             # JUMP: Space Bar
-            if event.key == pygame.K_SPACE and is_grounded:
-                y_velocity = jump_power
-                is_grounded = False
-                
-            # ATTACK: Z Key
-            if event.key == pygame.K_z:
+                # Horizontal Movement (Left / Right) - FIXED
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        player_x -= player_speed
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        player_x += player_speed
                 # Distance check to see if enemy is close enough to hit
                 distance = math.sqrt((player_x - enemy_x)**2 + (player_y - enemy_y)**2)
                 if distance < 70:
